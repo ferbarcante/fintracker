@@ -2,8 +2,10 @@
 
 use Adianti\Control\TAction;
 use Adianti\Control\TPage;
+use Adianti\Registry\TSession;
 use Adianti\Widget\Form\TEntry;
 use Adianti\Widget\Form\TLabel;
+use Adianti\Widget\Util\TCardView;
 use Adianti\Wrapper\BootstrapFormBuilder;
 
 class ContaView extends TPage
@@ -29,5 +31,13 @@ class ContaView extends TPage
         $this->form->addAction('Procurar', new TAction([$this, 'onSearch']), 'fa:search blue');
         $this->form->addActionLink('Novo',  new TAction(['ContaForm', 'onEdit']), 'fa:plus green');
 
+        // keep the form filled with the search data
+        $nome->setValue( TSession::getValue( 'Conta_nome' ) );
+      
+        // creates the Card View
+        $this->cards = new TCardView;
+        $this->cards->setContentHeight(170);
+        $this->cards->setTitleAttribute('{nome} (#{id})');
+        
     }
 }
