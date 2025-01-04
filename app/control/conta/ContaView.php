@@ -68,7 +68,7 @@ class ContaView extends TPage
         // creates the page structure using a table
         $vbox = new TVBox;
         $vbox->style = 'width: 100%';
-        $vbox->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
+        // $vbox->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
         $vbox->add($this->form); // add a row to the form
         $vbox->add(TPanelGroup::pack('', $this->cards, $this->pageNavigation)); // add a row for page navigation
         
