@@ -13,9 +13,9 @@ class Conta extends TRecord
         parent::__construct($id, $callObjectLoad);
         parent::addAttribute('id_conta');
         parent::addAttribute('nm_conta');
-        parent::addAttribute('vl_atual');
+        parent::addAttribute('vl_saldo');
         parent::addAttribute('tp_conta');
     }
 
-    
+
 }
