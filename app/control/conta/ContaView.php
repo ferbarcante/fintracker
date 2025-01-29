@@ -2,10 +2,13 @@
 
 use Adianti\Control\TAction;
 use Adianti\Control\TPage;
+use Adianti\Database\TTransaction;
 use Adianti\Registry\TSession;
 use Adianti\Widget\Container\TPanelGroup;
 use Adianti\Widget\Container\TVBox;
 use Adianti\Widget\Datagrid\TPageNavigation;
+use Adianti\Widget\Dialog\TMessage;
+use Adianti\Widget\Dialog\TQuestion;
 use Adianti\Widget\Form\TEntry;
 use Adianti\Widget\Form\TLabel;
 use Adianti\Widget\Util\TCardView;
@@ -55,11 +58,11 @@ class ContaView extends TPage
                                        </div> '
         );
         
-        $edit_action   = new TAction(['ContaForm', 'onEdit'], ['id'=> '{id}']);
+        $edit_action   = new TAction(['ContaForm', 'onEdit'], ['id_conta'=> '{id_conta}']);
         $delete_action = new TAction([$this, 'onDelete'], ['id_conta'=> '{id_conta}', 'register_state' => 'false']);
         
-        //$this->cards->addAction($edit_action,   'Edit',   'far:edit blue');
-        //$this->cards->addAction($delete_action, 'Delete', 'far:trash-alt red');
+        $this->cards->addAction($edit_action,   'Edit',   'far:edit blue');
+        $this->cards->addAction($delete_action, 'Delete', 'far:trash-alt red');
           
         // creates the page navigation
         $this->pageNavigation = new TPageNavigation;
@@ -75,4 +78,69 @@ class ContaView extends TPage
         // add the table inside the page
         parent::add($vbox);
     }
+
+    public function onEdit($param = NULL)
+    {
+        try 
+        {
+            if(isset($param['id_conta']))
+            {
+                $idConta = $param['id_conta'];
+                TTransaction::open('fintracker');
+                $tipoConta = new TipoConta($idConta);
+                $this->form->setData($tipoConta);
+                $this->onReload();
+            } 
+        }
+        catch (Exception $e)
+        {
+            new TMessage('error', $e->getMessage());
+            TTransaction::rollback();
+        } finally 
+        {
+            TTransaction::close();
+        }
+    }
+
+    public static function onDelete($param = NULL)
+    {
+        try 
+        {  
+            $action = new TAction([__CLASS__, 'Delete']);
+            $action->setParameters($param);
+    
+            new TQuestion('Deseja realmente excluir a conta bancária?', $action);
+        } 
+        catch (Exception $e) 
+        {
+            new TMessage('error', $e->getMessage());
+        }
+    }
+
+       
+    public static function Delete($param = NULL)
+    {
+        try 
+        {  
+            TTransaction::open('fintracker'); // Abre a transação
+    
+            $idConta = $param['id_conta'];
+    
+            $conta = new Conta($idConta, FALSE);
+            $conta->delete();
+            
+            $pos_action = new TAction([__CLASS__, 'onReload']);
+            new TMessage('info', 'Registro excluído com sucesso!', $pos_action);
+    
+            TTransaction::close(); // Finaliza a transação
+        } 
+        catch (Exception $e)
+        {
+            // Exibe a mensagem de erro
+            new TMessage('error', $e->getMessage());
+            TTransaction::rollback(); // Reverte a transação
+        }
+    }
+    
 }
+
