@@ -69,7 +69,8 @@ class ContaForm extends TPage
     public function onSave()
     {
         $contaService = new ContaService;
-        $contaService->Criar();
+        $contaService->criar();
+        
     }
 
     function onClose()
@@ -108,26 +109,9 @@ class ContaForm extends TPage
 
     function Edit($param = NULL)
     {
-        try 
-        {
-            $data = $this->form->getData();
+        $data = $this->form->getData();
 
-            $this->form->setData($data);
-            TTransaction::open('fintracker');
-            
-            $conta = new Conta();
-            
-            W5ISessao::obterObjetoEdicaoSessao($conta, 'id_conta', null, __CLASS__);
-            
-        } 
-        catch (Exception $e)
-        {
-            new TMessage('error', $e->getMessage());
-            TTransaction::rollback();
-        } 
-        finally 
-        {
-            TTransaction::close();
-        }
+        $contaService = new ContaService;
+        $contaService->editar($data);
     }
 }
