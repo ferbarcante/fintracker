@@ -6,6 +6,7 @@ use Adianti\Core\AdiantiCoreApplication;
 use Adianti\Database\TTransaction;
 use Adianti\Validator\TRequiredListValidator;
 use Adianti\Validator\TRequiredValidator;
+use Adianti\Widget\Base\TScript;
 use Adianti\Widget\Container\TVBox;
 use Adianti\Widget\Datagrid\TDataGrid;
 use Adianti\Widget\Datagrid\TDataGridColumn;
@@ -27,7 +28,12 @@ class ContaForm extends TPage
    {
         parent::__construct();      
  
-        $this->setAfterSaveAction( new TAction([$this, 'closeWindow' ]) );
+        // $this->setAfterSaveAction( new TAction([$this, 'closeWindow' ]) );
+        
+        if (!$this->embedded)
+        {
+            parent::setTargetContainer('adianti_right_panel');
+        }
 
         $this->form = new BootstrapFormBuilder('form_categores');
         $this->form->setFormTitle('Registre suas contas bancárias:');
@@ -64,18 +70,21 @@ class ContaForm extends TPage
         {
             TTransaction::open('fintracker');
             $this->form->validate();
-
             $formData = $this->form->getData();
-
             $conta = new Conta;
             $conta->fromArray((array) $formData);
+
+            W5ISessao::obterObjetoEdicaoSessao($conta, 'id_conta', null, __CLASS__);
+
+            $conta->nm_conta = $formData->nm_conta;
+            $conta->vl_saldo = $formData->vl_saldo;
+            $conta->id_tipoconta = $formData->id_tipoconta;
+            
             $conta->store();
 
-            $formData->id_conta = $conta->id_conta;
-            $this->form->setData($formData);
-
+            $posAction = new TAction(['ContaView', 'onReload']);
             TTransaction::close();
-            new TMessage('info', 'Registro salvo com sucesso!');
+            new TMessage('info', 'Registro salvo com sucesso!', $posAction);
         }
         catch (Exception $e)
         {
@@ -86,5 +95,12 @@ class ContaForm extends TPage
         {
             TTransaction::close();
         }
+    }
+
+    function onClose()
+    {
+        TScript::create("Template.closeRightPanel()");
+        W5ISessao::removerObjetoEdicaoSessao(__CLASS__);
+
     }
 }

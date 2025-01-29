@@ -33,7 +33,7 @@ class ContaView extends TPage
         $this->form->addFields([new TLabel('Nome da Carteira:')], [$nome]);
 
         $this->form->addAction('Procurar', new TAction([$this, 'onSearch']), 'fa:search blue');
-        //$this->form->addActionLink('Novo',  new TAction(['ContaForm', 'onEdit']), 'fa:plus green');
+        $this->form->addActionLink('Novo',  new TAction(['ContaForm', 'onEdit']), 'fa:plus green');
 
         // keep the form filled with the search data
         $nome->setValue( TSession::getValue( 'Conta_nome' ) );
@@ -55,8 +55,8 @@ class ContaView extends TPage
                                        </div> '
         );
         
-        //$edit_action   = new TAction(['ContaForm', 'onEdit'], ['id'=> '{id}']);
-        //$delete_action = new TAction([$this, 'onDelete'], ['id_conta'=> '{id_conta}', 'register_state' => 'false']);
+        $edit_action   = new TAction(['ContaForm', 'onEdit'], ['id'=> '{id}']);
+        $delete_action = new TAction([$this, 'onDelete'], ['id_conta'=> '{id_conta}', 'register_state' => 'false']);
         
         //$this->cards->addAction($edit_action,   'Edit',   'far:edit blue');
         //$this->cards->addAction($delete_action, 'Delete', 'far:trash-alt red');
