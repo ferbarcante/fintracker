@@ -20,7 +20,7 @@ use Adianti\Wrapper\BootstrapFormBuilder;
 
 class ContaForm extends TPage 
 {
-    protected $form;
+    public $form;
 
     // use Adianti\Base\AdiantiStandardFormListTrait;
 
@@ -68,35 +68,8 @@ class ContaForm extends TPage
 
     public function onSave()
     {
-        try
-        {
-            TTransaction::open('fintracker');
-            $this->form->validate();
-            $formData = $this->form->getData();
-            $conta = new Conta;
-            $conta->fromArray((array) $formData);
-
-            W5ISessao::obterObjetoEdicaoSessao($conta, 'id_conta', null, __CLASS__);
-
-            $conta->nm_conta = $formData->nm_conta;
-            $conta->vl_saldo = $formData->vl_saldo;
-            $conta->id_tipoconta = $formData->id_tipoconta;
-            
-            $conta->store();
-
-            $posAction = new TAction(['ContaView', 'onReload']);
-            TTransaction::close();
-            new TMessage('info', 'Registro salvo com sucesso!', $posAction);
-        }
-        catch (Exception $e)
-        {
-            $this->form->setData($this->form->getData());
-            new TMessage('error', $e->getMessage());
-            TTransaction::rollback();
-        } finally
-        {
-            TTransaction::close();
-        }
+        $contaService = new ContaService;
+        $contaService->Criar();
     }
 
     function onClose()
