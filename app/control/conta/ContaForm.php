@@ -22,7 +22,7 @@ class ContaForm extends TPage
 {
     protected $form;
 
-    use Adianti\Base\AdiantiStandardFormListTrait;
+    // use Adianti\Base\AdiantiStandardFormListTrait;
 
     public function __construct()
    {
@@ -55,6 +55,8 @@ class ContaForm extends TPage
 
         $this->form->addAction( 'Salvar', new TAction([$this, 'onSave']), 'fa:save green');
         $this->form->addActionLink('Limpar Formulário', new TAction([$this, 'onEdit']), 'fa:eraser red');
+        $this->form->addHeaderActionLink('Fechar', new TAction([$this, 'onClose']), 'fa:times red');
+        $this->form->addAction('Editar', new TAction([$this, 'Edit']), 'far:edit blue');
 
         $vbox = new TVBox;
         $vbox->style = 'width: 100%';
@@ -101,6 +103,58 @@ class ContaForm extends TPage
     {
         TScript::create("Template.closeRightPanel()");
         W5ISessao::removerObjetoEdicaoSessao(__CLASS__);
+    }
 
+    public function onEdit($param = null)
+    {
+        try
+        {
+            TTransaction::open('fintracker');
+
+            if(isset($param['id_conta']))
+            {
+                $idConta = $param['id_conta'];
+                $conta = new Conta($idConta);
+
+                W5ISessao::incluirObjetoEdicaoSessao($conta, $idConta, 'id_conta', __CLASS__);
+
+                $this->form->setEditable(false);
+                $this->form->setdata($conta);
+            }
+        } 
+        catch (Exception $e)
+        {
+            new TMessage('error', $e->getMessage());
+            TTransaction::rollback();
+        }
+        finally
+        {
+            TTransaction::close();
+        }
+    }
+
+    function Edit($param = NULL)
+    {
+        try 
+        {
+            $data = $this->form->getData();
+
+            $this->form->setData($data);
+            TTransaction::open('fintracker');
+            
+            $conta = new Conta();
+            
+            W5ISessao::obterObjetoEdicaoSessao($conta, 'id_conta', null, __CLASS__);
+            
+        } 
+        catch (Exception $e)
+        {
+            new TMessage('error', $e->getMessage());
+            TTransaction::rollback();
+        } 
+        finally 
+        {
+            TTransaction::close();
+        }
     }
 }
