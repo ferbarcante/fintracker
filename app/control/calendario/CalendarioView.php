@@ -23,7 +23,7 @@ class CalendarioView extends TPage
         $this->fc->setEventUpdateAction(new TAction(array('CalendarioForm', 'onUpdate')));
         $this->fc->enableFullHeight();
 
-        $this->fc->setOption('businessHours', [ [ 'dow' => [ 1, 2, 3, 4, 5 ], 'start' =>'oo:oo', 'end' => '18:00']]);
+        $this->fc->setOption('businessHours', [ [ 'dow' => [ 1, 2, 3, 4, 5 ], 'start' =>'08:00', 'end' => '18:00']]);
         parent::add(TPanelGroup::pack('', $this->fc));
     }
 
@@ -34,7 +34,7 @@ class CalendarioView extends TPage
         try
         {
             TTransaction::open('fintracker');
-            $events = CalendarEvent::where('nu_tempoinicio', '<=', $param('end'))->where('nu_tempofim', '>=', $param['start'])->load();
+            $events = CalendarEvent::where('nu_tempoinicio', '<=', $param['end'])->where('nu_tempofim', '>=', $param['start'])->load();
 
             if($events)
             {
@@ -43,9 +43,14 @@ class CalendarioView extends TPage
                     $event_array = $event->toArray();
                     $event_array['start'] = str_replace( ' ', 'T', $event_array['nu_tempoinicio']);
                     $event_array['end'] = str_replace( ' ', 'T', $event_array['nu_tempofim']);
+                   
+                    if (!isset($event_array['nm_titulo'])) {
+                        var_dump($event_array);
+                        throw new Exception("Erro: chave 'nm_titulo' não encontrada no evento ID: {$event_array['id_eventocalendario']}");
+                    }
 
                     $popover_content = $event->render("<b>Título</b>: {nm_titulo} <br> <b>Descrição</b>: {ds_descricao}");
-                    $event_array['title'] = TFullCalendar::renderPopover($event_array['title'], 'Popover title', $popover_content);
+                    $event_array['title'] = TFullCalendar::renderPopover($event_array['nm_titulo'], 'Popover title', $popover_content);
 
                     $return[] = $event_array;
                 }

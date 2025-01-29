@@ -153,7 +153,8 @@ class CalendarioForm extends TWindow
             $data = $this->form->getData();
             
             $object = new CalendarEvent;
-            $object->nm_cor = $data->color;
+
+            $object->nm_cor = $data->cor;
             // $object->id = $data->id;
             $object->nm_titulo = $data->title;
             $object->ds_descricao = $data->description;
@@ -166,7 +167,7 @@ class CalendarioForm extends TWindow
             $this->form->setData($data); // keep form data
             
             TTransaction::close(); // close the transaction
-            $posAction = new TAction(array('FullCalendarDatabaseView', 'onReload'));
+            $posAction = new TAction(array('CalendarioView', 'onReload'));
             $posAction->setParameter('view', $data->view);
             $posAction->setParameter('date', $data->start_date);
             
