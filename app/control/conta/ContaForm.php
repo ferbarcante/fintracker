@@ -2,12 +2,14 @@
 
 use Adianti\Control\TAction;
 use Adianti\Control\TPage;
+use Adianti\Core\AdiantiCoreApplication;
 use Adianti\Database\TTransaction;
 use Adianti\Validator\TRequiredListValidator;
 use Adianti\Validator\TRequiredValidator;
 use Adianti\Widget\Container\TVBox;
 use Adianti\Widget\Datagrid\TDataGrid;
 use Adianti\Widget\Datagrid\TDataGridColumn;
+use Adianti\Widget\Dialog\TMessage;
 use Adianti\Widget\Form\TCombo;
 use Adianti\Widget\Form\TEntry;
 use Adianti\Widget\Form\TLabel;
@@ -56,12 +58,33 @@ class ContaForm extends TPage
 
     }
 
-    public function onSabe()
+    public function onSave()
     {
         try
         {
             TTransaction::open('fintracker');
-            
+            $this->form->validate();
+
+            $formData = $this->form->getData();
+
+            $conta = new Conta;
+            $conta->fromArray((array) $formData);
+            $conta->store();
+
+            $formData->id_conta = $conta->id_conta;
+            $this->form->setData($formData);
+
+            TTransaction::close();
+            new TMessage('info', 'Registro salvo com sucesso!');
+        }
+        catch (Exception $e)
+        {
+            $this->form->setData($this->form->getData());
+            new TMessage('error', $e->getMessage());
+            TTransaction::rollback();
+        } finally
+        {
+            TTransaction::close();
         }
     }
 }
