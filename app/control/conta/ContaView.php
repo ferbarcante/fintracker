@@ -30,10 +30,10 @@ class ContaView extends TPage
         $this->form->setFormTitle('Carteiras');
 
         $nome = new TEntry('nome');
-        $this->form->addFields([new TLabel('Nome da Carteira:')]. [$nome]);
+        $this->form->addFields([new TLabel('Nome da Carteira:')], [$nome]);
 
         $this->form->addAction('Procurar', new TAction([$this, 'onSearch']), 'fa:search blue');
-        $this->form->addActionLink('Novo',  new TAction(['ContaForm', 'onEdit']), 'fa:plus green');
+        //$this->form->addActionLink('Novo',  new TAction(['ContaForm', 'onEdit']), 'fa:plus green');
 
         // keep the form filled with the search data
         $nome->setValue( TSession::getValue( 'Conta_nome' ) );
@@ -48,18 +48,18 @@ class ContaView extends TPage
         $this->cards->setItemTemplate('<div style="float:left;width:50%;padding-right:10px">
                                            <b>Nome</b> <br> {nm_conta} <br>
                                            <b>Saldo</b> <br> {vl_saldo} <br>
-                                           <b>Tipo</b> <br> {tp_saldo}
+                                           <b>Tipo</b> <br> {id_tipoconta}
                                        </div>
                                        <div style="float:right;width:50%">
                                            <img style="height:100px;float:right;margin:5px" src="{photo_path}">
                                        </div> '
         );
         
-        $edit_action   = new TAction(['ContaForm', 'onEdit'], ['id'=> '{id}']);
-        $delete_action = new TAction([$this, 'onDelete'], ['id_conta'=> '{id_conta}', 'register_state' => 'false']);
+        //$edit_action   = new TAction(['ContaForm', 'onEdit'], ['id'=> '{id}']);
+        //$delete_action = new TAction([$this, 'onDelete'], ['id_conta'=> '{id_conta}', 'register_state' => 'false']);
         
-        $this->cards->addAction($edit_action,   'Edit',   'far:edit blue');
-        $this->cards->addAction($delete_action, 'Delete', 'far:trash-alt red');
+        //$this->cards->addAction($edit_action,   'Edit',   'far:edit blue');
+        //$this->cards->addAction($delete_action, 'Delete', 'far:trash-alt red');
           
         // creates the page navigation
         $this->pageNavigation = new TPageNavigation;
