@@ -1,4 +1,17 @@
 <menu>
+    <menuitem label='Fintracker'>
+        <icon>fas:sliders fa-fw</icon>
+        <menu>
+            <menuitem label='Contas'>
+                <icon>fas:tachometer-alt fa-fw</icon>
+                <action>ContaView</action>
+            </menuitem>
+             <menuitem label='Agenda'>
+                <icon>far fa-calendar-alt fa-fw</icon>
+                <action>CalendarioView</action>
+            </menuitem>
+        </menu>
+    </menuitem>
     <menuitem label='_t{Administration}'>
         <icon>fas:sliders fa-fw</icon>
         <menu>
