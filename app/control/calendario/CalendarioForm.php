@@ -153,12 +153,12 @@ class CalendarioForm extends TWindow
             $data = $this->form->getData();
             
             $object = new CalendarEvent;
-            $object->color = $data->color;
-            $object->id = $data->id;
-            $object->title = $data->title;
-            $object->description = $data->description;
-            $object->start_time = $data->start_date . ' ' . str_pad($data->start_hour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($data->start_minute, 2, '0', STR_PAD_LEFT) . ':00';
-            $object->end_time = $data->end_date . ' ' . str_pad($data->end_hour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($data->end_minute, 2, '0', STR_PAD_LEFT) . ':00';
+            $object->nm_cor = $data->color;
+            // $object->id = $data->id;
+            $object->nm_titulo = $data->title;
+            $object->ds_descricao = $data->description;
+            $object->nu_tempoinicio = $data->start_date . ' ' . str_pad($data->start_hour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($data->start_minute, 2, '0', STR_PAD_LEFT) . ':00';
+            $object->nu_tempofim = $data->end_date . ' ' . str_pad($data->end_hour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($data->end_minute, 2, '0', STR_PAD_LEFT) . ':00';
             
             $object->store(); // stores the object
             
@@ -212,7 +212,7 @@ class CalendarioForm extends TWindow
 
     public function onUpdate()
     {
-        
+
     }
 
 
