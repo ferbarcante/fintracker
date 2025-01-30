@@ -1,17 +1,16 @@
 <menu>
-    <menuitem label='Fintracker'>
-        <icon>fas:sliders fa-fw</icon>
-        <menu>
-            <menuitem label='Contas'>
-                <icon>fas:tachometer-alt fa-fw</icon>
-                <action>ContaView</action>
-            </menuitem>
-             <menuitem label='Agenda'>
-                <icon>far fa-calendar-alt fa-fw</icon>
-                <action>CalendarioView</action>
-            </menuitem>
-        </menu>
-    </menuitem>
+    <menuitem label='Contas'>
+        <icon>fas:bank</icon>
+        <action>ContaView</action>
+    </menuitem>      
+      <menuitem label='Transações'>
+        <icon>fas:shuffle</icon>
+        <action>TransacaoView</action>
+    </menuitem>  
+      <menuitem label='Agenda'>
+        <icon>fas:calendar</icon>
+        <action>CalendarioView</action>
+    </menuitem>    
     <menuitem label='_t{Administration}'>
         <icon>fas:sliders fa-fw</icon>
         <menu>
@@ -57,7 +56,7 @@
               </menuitem>
         </menu>
     </menuitem>
-    
+<!--     
     <menuitem label='Logs'>
         <icon>fas:desktop fa-fw</icon>
         <menu>
@@ -116,5 +115,5 @@
     <menuitem label='Logout'>
         <action>LoginForm#method=onLogout#static=1</action>
         <icon>fas:sign-out-alt fa-fw</icon>
-    </menuitem>
+    </menuitem> -->
 </menu>
